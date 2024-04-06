@@ -1,17 +1,30 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class ThemeState {
+class ThemeState extends Equatable {
   final ThemeData themeData;
 
-  ThemeState(this.themeData);
+  const ThemeState(this.themeData);
 
-  static ThemeState get darkTheme =>
-      ThemeState(ThemeData.dark().copyWith(
-        // Customize dark theme properties
-      ));
+  static ThemeState get darkTheme => ThemeState(
+        ThemeData.dark().copyWith(
+          textTheme: ThemeData.dark().textTheme.apply(
+                fontFamily: 'Quicksand',
+              ),
+          // Customize dark theme properties
+        ),
+      );
 
-  static ThemeState get lightTheme =>
-      ThemeState(ThemeData.light().copyWith(
-        // Customize light theme properties
-      ));
+  static ThemeState get lightTheme => ThemeState(
+        ThemeData.light().copyWith(
+          textTheme: ThemeData.light().textTheme.apply(
+                fontFamily: 'Quicksand',
+              ),
+          // Customize light theme properties
+        ),
+      );
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [themeData];
 }

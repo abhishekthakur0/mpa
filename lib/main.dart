@@ -2,10 +2,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mpa/modules/home/view/detail_page.dart';
 import 'package:mpa/modules/home/view/homepage.dart';
 
 import 'firebase_options.dart';
+import 'modules/auth/bloc/auth.dart';
 import 'modules/auth/view/auth.dart';
 import 'theme/theme.dart';
 
@@ -22,12 +23,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ThemeBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AuthBloc()),
+        BlocProvider(create: (context) => ThemeBloc()),
+      ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
           return MaterialApp(
             theme: state.themeData,
+            routes: {
+              DetailPage.route: (context) => const DetailPage(),
+            },
             home: StreamBuilder(
                 stream: FirebaseAuth.instance.authStateChanges(),
                 builder: (context, AsyncSnapshot<User?> snapshot) {
