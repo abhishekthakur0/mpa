@@ -2,10 +2,20 @@ abstract class AuthEvent {
   const AuthEvent();
 }
 
-abstract class AuthSignIn extends AuthEvent {
+class AuthSignIn extends AuthEvent {
   const AuthSignIn();
 }
 
-abstract class AuthSignOut extends AuthEvent {
+class AuthSignOut extends AuthEvent {
   const AuthSignOut();
+}
+
+class AuthEmailChanged extends AuthEvent {
+  final String email;
+  const AuthEmailChanged(this.email);
+}
+
+class AuthPasswordChanged extends AuthEvent {
+  final String password;
+  const AuthPasswordChanged(this.password);
 }

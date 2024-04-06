@@ -20,6 +20,9 @@ class AuthSuccess extends AuthState {
 }
 
 class AuthFailure extends AuthState {
+  // Add a message property to the AuthFailure class optionally
+  final String? message;
   @override
   List<Object> get props => [];
+  const AuthFailure([this.message]);
 }

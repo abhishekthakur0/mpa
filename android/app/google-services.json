@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1060090885709",
+    "project_id": "music-playing-app",
+    "storage_bucket": "music-playing-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060090885709:android:302acfc84bc5e539ee4e04",
+        "android_client_info": {
+          "package_name": "dev.abhishekthakur.mpa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYHQh0Zg5tMpJJBvvetZEC4ZPkX046t-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
