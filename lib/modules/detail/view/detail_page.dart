@@ -2,11 +2,14 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:mpa/modules/home/models/MusicModel.dart';
 
-class DetailPage extends StatefulWidget {
-  static const String route = '/detail';
+import '../bloc/detail.dart';
 
+class DetailPage extends StatefulWidget {
+  static const String route = '/detail/';
+  final String id;
   const DetailPage({
     super.key,
+    required this.id,
   });
 
   @override
@@ -15,9 +18,11 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   final assetsAudioPlayer = AssetsAudioPlayer();
-  late final MusicModel item;
   @override
   void initState() {
+    BlocProvider.of<DetailBloc>(context).add(LoadDetail(
+      widget.id,
+    ));
     super.initState();
   }
 
@@ -29,12 +34,33 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final item = ModalRoute.of(context)!.settings.arguments as MusicModel;
-    assetsAudioPlayer.open(
-      Audio.network(item.audioUrl!),
-      autoStart: false,
-      showNotification: true,
+    return BlocConsumer<DetailBloc, DetailState>(
+      listener: (BuildContext context, Object? state) {},
+      builder: (BuildContext context, state) {
+        if (state is DetailLoading) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        if (state is DetailLoaded) {
+          assetsAudioPlayer.open(
+            Audio.network(state.item.audioUrl!),
+            autoStart: false,
+            showNotification: true,
+          );
+          return _buildView(state.item);
+        }
+        if (state is MetaDataUpdated) {
+          return _buildView(state.item);
+        }
+        return const SizedBox();
+      },
     );
+  }
+
+  _buildView(MusicModel item) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -55,7 +81,7 @@ class _DetailPageState extends State<DetailPage> {
               ),
               // Hero animation
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.4,
                 child: Center(
                   child: Hero(
                     tag: item.id,
@@ -97,12 +123,68 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ],
                   ),
+                  // Favorite button
+                  IconButton(
+                    onPressed: () {
+                      BlocProvider.of<DetailBloc>(context).add(
+                        SongFavorite(
+                          item.id,
+                          !item.isFavorite,
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      item.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    ),
+                  ),
                 ],
               ),
               // Gap
               const SizedBox(
                 height: 30,
               ),
+              // Slider
+              assetsAudioPlayer.builderRealtimePlayingInfos(
+                builder: (context, RealtimePlayingInfos infos) {
+                  return Column(
+                    children: [
+                      Slider(
+                        value: infos.currentPosition.inSeconds.toDouble(),
+                        onChanged: (value) {
+                          assetsAudioPlayer.seek(
+                            Duration(
+                              seconds: value.toInt(),
+                            ),
+                          );
+                        },
+                        min: 0,
+                        max: infos.duration.inSeconds.toDouble(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              getDuration(infos.currentPosition.inSeconds),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              getDuration(infos.duration.inSeconds),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                },
+              ),
+
               // Play / Pause button
               StreamBuilder(
                 stream: assetsAudioPlayer.isPlaying,
@@ -111,6 +193,7 @@ class _DetailPageState extends State<DetailPage> {
                     onPressed: () {
                       assetsAudioPlayer.playOrPause();
                     },
+                    color: Theme.of(context).primaryColor,
                     icon: Icon(
                       snapshot.data ?? false
                           ? Icons.pause_circle_filled

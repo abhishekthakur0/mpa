@@ -7,16 +7,21 @@ class ThemeState extends Equatable {
   const ThemeState(this.themeData);
 
   static ThemeState get darkTheme => ThemeState(
-        ThemeData.dark().copyWith(
+        ThemeData.dark(
+          useMaterial3: true,
+        ).copyWith(
           textTheme: ThemeData.dark().textTheme.apply(
                 fontFamily: 'Quicksand',
               ),
           // Customize dark theme properties
+          primaryColor: const Color(0xFFEADDFF),
         ),
       );
 
   static ThemeState get lightTheme => ThemeState(
-        ThemeData.light().copyWith(
+        ThemeData.light(
+          useMaterial3: true,
+        ).copyWith(
           textTheme: ThemeData.light().textTheme.apply(
                 fontFamily: 'Quicksand',
               ),

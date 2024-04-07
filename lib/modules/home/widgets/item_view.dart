@@ -2,14 +2,19 @@
 // Has a hero animation
 import 'package:flutter/material.dart';
 
+import '../../detail/view/detail_page.dart';
 import '../bloc/home.dart';
 import '../models/MusicModel.dart';
-import '../view/detail_page.dart';
 
 class MusicItemWidget extends StatelessWidget {
-  const MusicItemWidget({super.key, required this.item});
+  const MusicItemWidget({
+    super.key,
+    required this.item,
+    required this.homeBloc,
+  });
 
   final MusicModel item;
+  final HomeBloc homeBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +61,11 @@ class MusicItemWidget extends StatelessWidget {
         },
       ),
       onTap: () {
-        Navigator.pushNamed(context, DetailPage.route, arguments: item);
+        Navigator.pushNamed(
+          context,
+          DetailPage.route + item.id,
+          arguments: homeBloc,
+        );
       },
     );
   }

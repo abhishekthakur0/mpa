@@ -33,7 +33,7 @@ class HomeView extends StatelessWidget {
             appBar: AppBar(
               centerTitle: false,
               title: const Text(
-                'Discover Songs',
+                ' Discover Songs',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -74,6 +74,7 @@ class HomeView extends StatelessWidget {
                         .add(ThemeToggle(currentTheme));
                   }
                 }),
+                const SizedBox(width: 10),
               ],
             ),
             body: SafeArea(
@@ -85,7 +86,7 @@ class HomeView extends StatelessWidget {
                   children: <Widget>[
                     // Search bar widget
                     Container(
-                      height: 50,
+                      height: 60,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                       ),
@@ -93,29 +94,27 @@ class HomeView extends StatelessWidget {
                         color: Theme.of(context).focusColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: TextField(
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(
-                            left: 10,
-                            bottom: 5,
+                      child: Center(
+                        child: TextField(
+                          style: const TextStyle(
+                            fontSize: 12,
                           ),
-                          border: InputBorder.none,
-                          hintText: 'Search',
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: Theme.of(context).focusColor,
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Search',
+                            suffixIcon: Icon(
+                              Icons.search,
+                              color: Theme.of(context).focusColor,
+                            ),
                           ),
+                          onChanged: (value) {
+                            // Add search functionality here
+                            BlocProvider.of<HomeBloc>(context).add(
+                              HomeSearch(value),
+                            );
+                          },
                         ),
-                        onChanged: (value) {
-                          // Add search functionality here
-                          BlocProvider.of<HomeBloc>(context).add(
-                            HomeSearch(value),
-                          );
-                        },
                       ),
                     ),
                     // Add a SizedBox with a height of 10
@@ -131,6 +130,7 @@ class HomeView extends StatelessWidget {
                           final item = songs[index];
                           return MusicItemWidget(
                             item: item,
+                            homeBloc: BlocProvider.of<HomeBloc>(context),
                           );
                         },
                       ),

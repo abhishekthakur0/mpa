@@ -2,9 +2,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mpa/modules/home/view/detail_page.dart';
 import 'package:mpa/modules/home/view/homepage.dart';
 
+import 'config/route_generator.dart';
 import 'firebase_options.dart';
 import 'modules/auth/bloc/auth.dart';
 import 'modules/auth/view/auth.dart';
@@ -32,31 +32,30 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           return MaterialApp(
             theme: state.themeData,
-            routes: {
-              DetailPage.route: (context) => const DetailPage(),
-            },
+            onGenerateRoute: RouteGenerator.generateRoute,
             home: StreamBuilder(
-                stream: FirebaseAuth.instance.authStateChanges(),
-                builder: (context, AsyncSnapshot<User?> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Scaffold(
-                      body: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return const Scaffold(
-                      body: Center(
-                        child: Text('An error occurred'),
-                      ),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    return const HomePage();
-                  }
-                  return const AuthPage();
-                }),
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, AsyncSnapshot<User?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return const Scaffold(
+                    body: Center(
+                      child: Text('An error occurred'),
+                    ),
+                  );
+                }
+                if (snapshot.hasData) {
+                  return const HomePage();
+                }
+                return const AuthPage();
+              },
+            ),
           );
         },
       ),

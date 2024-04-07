@@ -1,6 +1,6 @@
 {
-    "name": "mpa",
-    "short_name": "mpa",
+    "name": "MPlayer",
+    "short_name": "MPlayer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
