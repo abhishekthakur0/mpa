@@ -16,6 +16,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignIn>((event, emit) async {
       emit(AuthLoading());
       try {
+        // Trim email and password
+        email = email.trim();
+        password = password.trim();
         // Validate email using regex
         final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
         if (!emailRegex.hasMatch(email)) {
