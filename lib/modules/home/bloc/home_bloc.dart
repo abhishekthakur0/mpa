@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../firestore_instance_provider.dart';
 import '../models/MusicModel.dart';
 import 'home.dart';
 
@@ -39,7 +39,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<List<MusicModel>> getSongs() async {
     final List<MusicModel> songs = [];
-    await FirebaseFirestore.instance.collection("songs").get().then((value) {
+    await FirebaseFirestoreProvider.instance
+        .collection("songs")
+        .get()
+        .then((value) {
       for (var song in value.docs) {
         songs.add(MusicModel(
           song.id,
@@ -57,7 +60,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
     if (isFavorite) {
-      FirebaseFirestore.instance
+      FirebaseFirestoreProvider.instance
           .collection("users")
           .doc(uid)
           .collection("favorites")
@@ -67,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         "mark": isFavorite,
       });
     } else {
-      FirebaseFirestore.instance
+      FirebaseFirestoreProvider.instance
           .collection("users")
           .doc(uid)
           .collection("favorites")
@@ -78,7 +81,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<List<String>> getFavorites() {
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    final favorites = FirebaseFirestore.instance
+    final favorites = FirebaseFirestoreProvider.instance
         .collection("users")
         .doc(uid)
         .collection("favorites")
